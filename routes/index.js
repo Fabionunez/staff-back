@@ -3,6 +3,18 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
+const Company = require('../models/company');
+
+const employeeRouter = require('./employee');
+
+const companyRouter = require('./company');
+
+//  * '/'
+router.use('/company', companyRouter);
+
+router.use('/employee', employeeRouter);
+
+
 
 const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/middlewares');
 
@@ -10,9 +22,8 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
 
-router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
+router.post('/', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
-
   User.findOne({
       username
     })
@@ -37,7 +48,7 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
 });
 
 router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
-  const { username, password } = req.body;
+  const { name, surname, corporateName, username, password } = req.body;
 
   User.findOne({
       username
@@ -54,14 +65,24 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
       const hashPass = bcrypt.hashSync(password, salt);
 
       const newUser = new User({
+        name,
+        surname,
         username,
-        password: hashPass,
+        password: hashPass
       });
 
-      return newUser.save().then(() => {
+
+
+      newUser.save().then(() => {
         // TODO delete password 
         req.session.currentUser = newUser;
-        res.status(200).json(newUser);
+        const newCompany = new Company({
+          corporateName,
+          userAdminId: newUser._id
+        })
+        newCompany.save().then(()=>{
+          res.status(200).json(newUser);
+        })
       });
     })
     .catch(next);
