@@ -6,7 +6,7 @@ const companySchema = new Schema({
   tradeName: String,
   corporateName: String,
   taxIdNumber: String,
-  adress: String,
+  address: String,
   city: String,
   postalCode: Number,
   state: String,

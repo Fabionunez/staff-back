@@ -26,6 +26,8 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
 // (login)
 router.post('/', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
+
+  console.log(username, password)
   User.findOne({
       username
     })
