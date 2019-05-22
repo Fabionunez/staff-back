@@ -19,11 +19,11 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { tradeName, corporateName, taxIdNumber, adress, city, postalCode, state, country } = req.body;
+  const { tradeName, corporateName, taxIdNumber, address, city, postalCode, state, country } = req.body;
   
   const { _id } = req.session.currentUser;
 
-  Company.findOneAndUpdate({ userAdminId: _id}, { $set: { tradeName, corporateName, taxIdNumber, adress, city, postalCode, state, country }}, { new: true })
+  Company.findOneAndUpdate({ userAdminId: _id}, { $set: { tradeName, corporateName, taxIdNumber, address, city, postalCode, state, country }}, { new: true })
   .then((company) => {
     res.status(200).json(company);
 

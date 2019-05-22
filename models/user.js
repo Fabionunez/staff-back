@@ -17,7 +17,7 @@ const userSchema = new Schema({
   photo: String,
   identificationNumber: String,
   socialSecurityNumber: Number,
-  adress: String,
+  address: String,
   city: String,
   postalCode: Number,
   state: String,

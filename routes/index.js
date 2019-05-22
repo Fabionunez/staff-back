@@ -22,6 +22,8 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
 
+
+// (login)
 router.post('/', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
   User.findOne({
@@ -73,7 +75,9 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
 
 
 
-      newUser.save().then(() => {
+      
+
+      newUser.save().then((user) => {
         // TODO delete password 
         req.session.currentUser = newUser;
         const newCompany = new Company({
@@ -81,7 +85,12 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
           userAdminId: newUser._id
         })
         newCompany.save().then(()=>{
-          res.status(200).json(newUser);
+          const companyId = newCompany._id
+          User.findByIdAndUpdate({ _id: newUser._id}, {$set: { companyID: companyId }}, { new: true })
+            .then((user)=>{
+              res.status(200).json(user);
+            })
+            .catch((err) => console.log(err));
         })
       });
     })
