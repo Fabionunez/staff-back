@@ -24,7 +24,7 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
 
 
 // (login)
-router.post('/', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
+router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
 
   console.log(username, password)
