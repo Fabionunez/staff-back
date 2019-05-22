@@ -75,10 +75,6 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         password: hashPass
       });
 
-
-
-      
-
       newUser.save().then((user) => {
         // TODO delete password 
         req.session.currentUser = newUser;
@@ -87,6 +83,7 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
           userAdminId: newUser._id
         })
         newCompany.save().then(()=>{
+          console.log(newCompany);
           const companyId = newCompany._id
           User.findByIdAndUpdate({ _id: newUser._id}, {$set: { companyID: companyId }}, { new: true })
             .then((user)=>{
