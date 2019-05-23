@@ -11,7 +11,6 @@ router.get('/', (req, res, next) => {
 
   const { _id } = req.session.currentUser;
   const {tradeName, corporateName, taxIdNumber, address, city, postalCode, province, country} = req.body;
-  // Still need to check if I am the admin before to show
 
 
   Company.findOne({userAdminId:_id})
@@ -21,16 +20,6 @@ router.get('/', (req, res, next) => {
     })
     .catch((err) => console.log(err))
 
-
-  // const { _id } = req.session.currentUser;
-  // console.log("backend /company")
-  
-  // Company.findOne({ userAdminId: _id })
-  //   .then((company) => {
-  //     res.status(200).json(company);
-
-  //   })
-  //   .catch((err) => console.log(err));
 
 });
 
