@@ -72,7 +72,8 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         name,
         surname,
         username,
-        password: hashPass
+        password: hashPass,
+        isAdmin: true
       });
 
       newUser.save().then((user) => {

@@ -41,7 +41,7 @@ router.post('/add', (req, res, next) => {
   // if it doesn't create a new user
   // add all the extra user data
 
-  const { name, surname, username, password } = req.body;
+  const { name, surname, title, username, password } = req.body;
   
   User.findOne({username}, 'username')
     .then((userExists) => {
@@ -62,6 +62,7 @@ router.post('/add', (req, res, next) => {
           const newUser = new User({
             name,
             surname,
+            title,
             username,
             password: hashPass,
             companyID: user.companyID
@@ -92,7 +93,7 @@ router.post('/delete', (req, res, next) => {
 // /employee/edit/:id  Visualizacion
 router.get('/edit/:id', (req, res, next) => {
 
-  const { name, surname, username, password } = req.body;
+  const { name, surname, title, username, password } = req.body;
 
     User.findById(req.params.id)
     .then((employee) => {
@@ -115,14 +116,14 @@ router.put('/edit', (req, res, next) => {
 
 
 
-  const { id, name, surname, username, password } = req.body;
+  const { id, name, surname, title, username, password } = req.body;
 
   console.log(name);
 
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password, salt);
 
-  User.findByIdAndUpdate(id, {$set: { name, surname, username, hashPass } })
+  User.findByIdAndUpdate(id, {$set: { name, surname, title, username, hashPass } })
   .then((employee) => {
     //employee.password = hashPass;
     console.log(employee);
