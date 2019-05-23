@@ -26,7 +26,9 @@ const userSchema = new Schema({
   emergencyPhone: Number,
   managerID: String,
   companyID: String,
-  isAdmin: Boolean
+  isAdmin: Boolean,
+  imageUrl: String
+
 }, {
   timestamps: {
     createdAt: 'created_at',

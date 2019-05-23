@@ -3,7 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
-const Company = require('../models/user');
+const Company = require('../models/company');
+const parser = require('../config/cloudinary');
+
 
 
 // /employee  (list) in the front /employees
@@ -14,8 +16,6 @@ router.get('/', (req, res, next) => {
 
   User.findOne({_id: req.session.currentUser._id})
     .then((employee) => {
-
-      //console.log(employee.companyID)
 
       User.find({companyID: employee.companyID})
       .then((employees) => {
@@ -41,7 +41,7 @@ router.post('/add', (req, res, next) => {
   // if it doesn't create a new user
   // add all the extra user data
 
-  const { name, surname, title, username, password } = req.body;
+  const { name, surname, title, imageUrl, username, password } = req.body;
   
   User.findOne({username}, 'username')
     .then((userExists) => {
@@ -65,7 +65,8 @@ router.post('/add', (req, res, next) => {
             title,
             username,
             password: hashPass,
-            companyID: user.companyID
+            companyID: user.companyID,
+            imageUrl
           });
     
           
@@ -93,7 +94,7 @@ router.post('/delete', (req, res, next) => {
 // /employee/edit/:id  Visualizacion
 router.get('/edit/:id', (req, res, next) => {
 
-  const { name, surname, title, username, password } = req.body;
+  const { name, surname, title, imageUrl, username, password } = req.body;
 
     User.findById(req.params.id)
     .then((employee) => {
@@ -116,14 +117,14 @@ router.put('/edit', (req, res, next) => {
 
 
 
-  const { id, name, surname, title, username, password } = req.body;
+  const { id, name, surname, title, imageUrl, username, password } = req.body;
 
   console.log(name);
 
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password, salt);
 
-  User.findByIdAndUpdate(id, {$set: { name, surname, title, username, hashPass } })
+  User.findByIdAndUpdate(id, {$set: { name, surname, title, imageUrl, username, hashPass } })
   .then((employee) => {
     //employee.password = hashPass;
     console.log(employee);
@@ -146,7 +147,7 @@ router.delete('/delete/:id', (req, res, next) => {
   // to do it check if the company of the user in the session 
   // is the admin of the company of the user to edit
 
-  console.log(req.params.id)
+  //console.log(req.params.id)
 
 
   User.findByIdAndDelete(req.params.id)
@@ -160,22 +161,14 @@ router.delete('/delete/:id', (req, res, next) => {
 });
 
 
-// router.post('/', (req, res, next) => {
-//   const { tradeName, corporateName, taxIdNumber, address, city, postalCode, state, country } = req.body;
-  
-//   const { _id } = req.session.currentUser;
-
-//   Company.findOneAndUpdate({ userAdminId: _id}, { $set: { tradeName, corporateName, taxIdNumber, address, city, postalCode, state, country }}, { new: true })
-//   .then((company) => {
-//     res.status(200).json(company);
-
-//   })
-//   .catch((err) => console.log(err));
-  
-// });
-
-
-
+router.post('/image', parser.single('photo'), (req, res, next) => {
+  console.log('file upload');
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+  };
+  const imageUrl = req.file.secure_url;
+  res.json(imageUrl).status(200);
+});
 
 
 module.exports = router;

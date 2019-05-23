@@ -9,7 +9,7 @@ const companySchema = new Schema({
   address: String,
   city: String,
   postalCode: Number,
-  state: String,
+  province: String,
   country: String,
   userAdminId: String
 }, {
