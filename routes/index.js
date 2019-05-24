@@ -52,7 +52,7 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
 });
 
 router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
-  const { name, surname, corporateName, username, password } = req.body;
+  const { name, surname, corporateName, username, password, imageUrl } = req.body;
 
   User.findOne({
       username
@@ -72,6 +72,7 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         name,
         surname,
         username,
+        imageUrl,
         password: hashPass,
         isAdmin: true
       });

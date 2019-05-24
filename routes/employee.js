@@ -91,18 +91,29 @@ router.post('/delete', (req, res, next) => {
   
 });
 
+
+
+
 // /employee/edit/:id  Visualizacion
 router.get('/edit/:id', (req, res, next) => {
 
   const { name, surname, title, imageUrl, username, password } = req.body;
 
+  console.log("req.session.currentUser._id:", req.session.currentUser._id);
+  console.log("id:", req.params.id);
+
+  if (req.session.currentUser._id === req.params.id){
+    console.log("in conditional backend")
     User.findById(req.params.id)
     .then((employee) => {
-      
-      res.status(200).json(employee);
 
+      res.status(200).json(employee);
     })
     .catch((err) => console.log(err));
+
+  }else{
+    res.status(200).json({message:"error"})
+  }
 
 });
 
@@ -114,24 +125,32 @@ router.put('/edit', (req, res, next) => {
   // to do it check if the company of the user in the session 
   // is the admin of the company of the user to edit
 
-
+  //console.log(req.session.currenUser_id, )
 
 
   const { id, name, surname, title, imageUrl, username, password } = req.body;
 
-  console.log(name);
+  // console.log("req.session.currentUser._id:", req.session.currentUser._id);
+  // console.log("id:", id);
 
-  const salt = bcrypt.genSaltSync(10);
-  const hashPass = bcrypt.hashSync(password, salt);
 
-  User.findByIdAndUpdate(id, {$set: { name, surname, title, imageUrl, username, hashPass } })
-  .then((employee) => {
-    //employee.password = hashPass;
-    console.log(employee);
-    res.status(200).json(employee);
-  })
-  .catch((err) => console.log(err));
+  // check if you are the one editing
+  if (req.session.currentUser._id === id){
 
+    const salt = bcrypt.genSaltSync(10);
+    const hashPass = bcrypt.hashSync(password, salt);
+
+    User.findByIdAndUpdate(id, {$set: { name, surname, title, imageUrl, username, hashPass } })
+    .then((employee) => {
+      //employee.password = hashPass;
+      //console.log(employee);
+      res.status(200).json(employee);
+    })
+    .catch((err) => console.log(err));
+
+  }else{
+    return null;
+  }
 
 
 });
@@ -162,7 +181,7 @@ router.delete('/delete/:id', (req, res, next) => {
 
 
 router.post('/image', parser.single('photo'), (req, res, next) => {
-  console.log('file upload');
+  //console.log('file upload');
   if (!req.file) {
     next(new Error('No file uploaded!'));
   };

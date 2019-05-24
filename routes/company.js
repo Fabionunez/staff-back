@@ -7,7 +7,6 @@ const Company = require('../models/company');
 // /company
 router.get('/', (req, res, next) => {
 
-  console.log("hi")
 
   const { _id } = req.session.currentUser;
   const {tradeName, corporateName, taxIdNumber, address, city, postalCode, province, country} = req.body;
@@ -15,13 +14,17 @@ router.get('/', (req, res, next) => {
 
   Company.findOne({userAdminId:_id})
     .then((company) =>{
-      console.log(company)
+      //console.log(company)
       res.status(200).json(company);
     })
     .catch((err) => console.log(err))
 
 
 });
+
+
+
+
 
 router.put('/', (req, res, next) => {
 
