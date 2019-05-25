@@ -14,13 +14,14 @@ router.use('/company', companyRouter);
 
 router.use('/employee', employeeRouter);
 
-
-
 const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/middlewares');
 
 router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
+
+
+
 
 
 // (login)
@@ -51,6 +52,18 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
     .catch(next);
 });
 
+
+
+
+
+
+
+
+// -----------------------------------------------------------------
+//
+//                /signup   REGISTER ADMIN USER
+//
+// -----------------------------------------------------------------
 router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { name, surname, corporateName, username, password, imageUrl } = req.body;
 
@@ -74,7 +87,8 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         username,
         imageUrl,
         password: hashPass,
-        isAdmin: true
+        isAdmin: true,
+
       });
 
       newUser.save().then((user) => {
@@ -89,6 +103,7 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
           const companyId = newCompany._id
           User.findByIdAndUpdate({ _id: newUser._id}, {$set: { companyID: companyId }}, { new: true })
             .then((user)=>{
+              req.session.currentUser = user;
               res.status(200).json(user);
             })
             .catch((err) => console.log(err));
@@ -98,10 +113,32 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
     .catch(next);
 });
 
+
+
+
+
+
+
+// -----------------------------------------------------------------
+//
+//                     /logout   LOGOUT USER
+//
+// -----------------------------------------------------------------
 router.post('/logout', isLoggedIn(), (req, res, next) => {
   req.session.destroy();
   return res.status(204).send();
 });
+
+
+
+
+
+
+// -----------------------------------------------------------------
+//
+//             Comprobar si se está usando
+//
+// -----------------------------------------------------------------
 
 router.get('/private', isLoggedIn(), (req, res, next) => {
   res.status(200).json({
