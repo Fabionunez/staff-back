@@ -343,6 +343,7 @@ router.put('/edit', (req, res, next) => {
             // next(err);
             console.log("el mail tiene un match con otro usuario diferente de ti. Enviar json para señalar el error")
             res.status(200).json({userExists: true});
+            
           }
         })
         .catch((err) => console.log(err))
