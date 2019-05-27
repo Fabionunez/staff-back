@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const teamSchema = new Schema({
   name: String,
-  usersIds: Array,
+  usersIds: [{ type: Schema.Types.ObjectId, ref:"User"}],
   teamLeaderid: String,
-  companyId: String,
+  companyId: String, /*{type: Schema.Types.ObjectId, ref:"Company"},*/
   mission: String,
   vision: String
 }, {

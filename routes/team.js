@@ -27,7 +27,10 @@ router.get('/list', (req, res, next) => {
       if(company.userAdminId === _id){
 
         Team.find({companyId: company._id})
-        .then((teams) => res.status(200).json(teams))
+        .populate('usersIds')
+        .then((teams) => {
+          console.log(teams)
+          res.status(200).json(teams)})
         .catch((err) => console.log(err))
 
       }else{
@@ -110,7 +113,7 @@ router.get('/view/:id', (req, res, next) => {
 
 
       // get the team to view
-      Team.findById(teamToView)
+      Team.findById(teamToView) /*.populate('companyId')*/
         .then((team) =>{
 
           console.log("company._id -> ", company._id);
@@ -120,7 +123,9 @@ router.get('/view/:id', (req, res, next) => {
 
             // console.log("can view")
             Team.findById(req.params.id)
+            .populate('usersIds')
             .then((team) => {
+              console.log(team)
               res.status(200).json(team);
             })
             .catch((err) => console.log(err));
@@ -207,6 +212,7 @@ router.put('/edit', (req, res, next) => {
   const { _id } = req.session.currentUser;
   const {id, name, usersIds, teamLeaderid, mission, vision} = req.body;
 
+  console.log("***********************************: ", teamLeaderid)
 
   // check the admin of the company from the session
   Company.findOne({userAdminId:_id})
@@ -217,14 +223,15 @@ router.put('/edit', (req, res, next) => {
       Team.findById(id)
         .then((team) =>{
 
-          console.log("company._id -> ", company._id);
-          console.log("team.companyId -> ", team.companyId);
+          // console.log("company._id -> ", company._id);
+          // console.log("team.companyId -> ", team.companyId);
 
           if(company._id.toString() === team.companyId){
 
             // console.log("can edit")
             Team.findByIdAndUpdate(id, { $set: {name, usersIds, teamLeaderid, mission, vision}}, { new: true })
             .then((team) => {
+              console.log(team);
               res.status(200).json(team);
             })
             .catch((err) => console.log(err));
