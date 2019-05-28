@@ -29,7 +29,7 @@ const app = express();
 
 app.use(cors({
   credentials: true,
-  origin: [process.env.PUBLIC_DOMAIN]
+  origin: [process.env.PUBLIC_DOMAIN, 'https://staff-ironhack.herokuapp.com/']
 }));
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -78,4 +78,17 @@ app.use((err, req, res, next) => {
   }
 });
 
+
+
+
+// REACT APP index.html	
+app.use((req, res, next) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+
+
 module.exports = app;
+
+
