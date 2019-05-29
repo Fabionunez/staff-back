@@ -25,6 +25,22 @@ router.get('/', (req, res, next) => {
 
 
 
+router.get('/logo', (req, res, next) => {
+
+  const { companyID  } = req.session.currentUser;
+
+  Company.findById(companyID)
+    .then((company) =>{
+      //console.log(company)
+      res.status(200).json(company);
+    })
+    .catch((err) => console.log(err))
+
+
+});
+
+
+
 
 
 
