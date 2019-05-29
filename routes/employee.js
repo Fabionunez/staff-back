@@ -147,14 +147,17 @@ router.post('/add', (req, res, next) => {
 
 router.get('/view/:id', (req, res, next) => {
 
+  console.log("view route")
+
   const userToView = req.params.id;
 
   const { companyID } = req.session.currentUser;
 
-  console.log("req.session.currentUser", req.session.currentUser)
+  // console.log("req.session.currentUser", req.session.currentUser)
 
   console.log("userToView: ",userToView);
   console.log("companyID: ",companyID);
+  
 
   User.findById(userToView) // find the user of the url param
     .then((employee) => {
@@ -190,9 +193,11 @@ router.get('/edit/:id', (req, res, next) => {
 
   const userToEdit = req.params.id;
 
-  console.log("companyID", companyID)
+  // console.log("companyID", companyID)
+  // console.log("_id: ", _id);
+  // console.log("userToEdit: ", userToEdit);
 
-  if(isAdmin){ // 1.- Check if you are an admin
+  if(isAdmin || _id === userToEdit){ // 1.- Check if you are an admin or the user is editing himself
 
     User.findById(userToEdit) // 1.2.- Get the user to edit and obtain his company ID
       .then((employee) => {
@@ -205,15 +210,6 @@ router.get('/edit/:id', (req, res, next) => {
         }
       })
       .catch((err) => console.log(err))
-
-  }else if(_id === userToEdit){ // 2.- Check if the user is editing himself
-    // Let the user see the data
-
-    User.findById(userToEdit) // Let the user see the data
-    .then((employee) => {
-        res.status(200).json(employee);
-    })
-    .catch((err) => console.log(err))
 
   }else{
     // send json with indications to redirec
@@ -235,6 +231,10 @@ router.get('/edit/:id', (req, res, next) => {
 //
 // -----------------------------------------------------------------
 router.put('/edit', (req, res, next) => {
+
+  const { _id, companyID, isAdmin } = req.session.currentUser;
+
+
 
   const {
     id, 
@@ -262,96 +262,132 @@ router.put('/edit', (req, res, next) => {
     imageUrl
    } = req.body;
 
+   const userToEdit = id;
+
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password, salt);
 
-  // console.log("*****************************************************")
-  // console.log("req.body.username", username);
-  // console.log("req.body.id", id);
 
-  User.findOne({username: username}) // find if exist a user with the email recieved
-   .then((employeeMatch) =>{
+  console.log("_id: ", _id);
+  console.log("userToEdit: ", userToEdit);
 
-      if(employeeMatch === null){ 
-        console.log("No encontró ningún usuario con ese mail. Adelante con el update")
-        User.findByIdAndUpdate(id, {$set: {     
-          username,
-          hashPass,
-          name,
-          surname,
-          title,
-          companyPhone,
-          dateStart,
-          birthDate,
-          gender,
-          nationality,
-          phone,
-          identificationNumber,
-          socialSecurityNumber,
-          address,
-          city,
-          postalCode,
-          province,
-          country,
-          emergencyContact,
-          emergencyPhone,
-          managerID,
-          imageUrl } })
-        .then((employee) => {
-          res.status(200).json(employee);
-        })
-        .catch((err) => console.log(err));   
 
-      }else{
-        console.log("sí encontró un usuario con ese mail")
-        User.findById(id)
-        .then((employeeToEdit) =>{
+  if(isAdmin || _id.toString() === userToEdit){ // 1.- Check if you are an admin or is the user trying to edit himself
 
-          if(employeeToEdit.username === username){
-            console.log("El email no ha cambiado. Adelante con el update")
-            User.findByIdAndUpdate(id, {$set: {     
-              username,
-              hashPass,
-              name,
-              surname,
-              title,
-              companyPhone,
-              dateStart,
-              birthDate,
-              gender,
-              nationality,
-              phone,
-              identificationNumber,
-              socialSecurityNumber,
-              address,
-              city,
-              postalCode,
-              province,
-              country,
-              emergencyContact,
-              emergencyPhone,
-              managerID,
-              imageUrl } })
-            .then((employee) => {
-              res.status(200).json(employee);
-            })
-            .catch((err) => console.log(err));   
-          }else{
-            // const err = new Error('Unprocessable Entity');
-            // err.status = 422;
-            // err.statusMessage = 'username-not-unique';
-            // next(err);
-            console.log("el mail tiene un match con otro usuario diferente de ti. Enviar json para señalar el error")
-            res.status(200).json({userExists: true});
-            
-          }
-        })
-        .catch((err) => console.log(err))
+    console.log("1");
+    User.findById(userToEdit) // 1.2.- Get the user to edit and obtain his company ID
+      .then((employee) => {
+        if (companyID === employee.companyID){ // 1.3.- Check if the user belongs the user admin's company
+          // Let the admin edit the data
+          console.log("2");
 
-    }
 
-   })
-   .catch((err) => console.log(err))
+        User.findOne({username: username}) // 1.4.- find if exist a user with the email recieved
+          .then((employeeMatch) =>{
+
+            console.log("3");
+
+              if(employeeMatch === null){ 
+
+                console.log("4");
+
+                console.log("No encontró ningún usuario con ese mail. Adelante con el update")
+                User.findByIdAndUpdate(id, {$set: {     
+                  username,
+                  hashPass,
+                  name,
+                  surname,
+                  title,
+                  companyPhone,
+                  dateStart,
+                  birthDate,
+                  gender,
+                  nationality,
+                  phone,
+                  identificationNumber,
+                  socialSecurityNumber,
+                  address,
+                  city,
+                  postalCode,
+                  province,
+                  country,
+                  emergencyContact,
+                  emergencyPhone,
+                  managerID,
+                  imageUrl } })
+                .then((employee) => {
+                  console.log("5");
+                  res.status(200).json(employee);
+                })
+                .catch((err) => console.log(err));   
+
+              }else{
+                console.log("6");
+                console.log("sí encontró un usuario con ese mail")
+                User.findById(id)
+                .then((employeeToEdit) =>{
+
+                  if(employeeToEdit.username === username){
+                    console.log("7");
+                    console.log("El email no ha cambiado. Adelante con el update")
+                    User.findByIdAndUpdate(id, {$set: {     
+                      username,
+                      hashPass,
+                      name,
+                      surname,
+                      title,
+                      companyPhone,
+                      dateStart,
+                      birthDate,
+                      gender,
+                      nationality,
+                      phone,
+                      identificationNumber,
+                      socialSecurityNumber,
+                      address,
+                      city,
+                      postalCode,
+                      province,
+                      country,
+                      emergencyContact,
+                      emergencyPhone,
+                      managerID,
+                      imageUrl } })
+                    .then((employee) => {
+                      console.log("8");
+                      res.status(200).json(employee);
+                    })
+                    .catch((err) => console.log(err));   
+                  }else{
+                    console.log("9");
+                    // const err = new Error('Unprocessable Entity');
+                    // err.status = 422;
+                    // err.statusMessage = 'username-not-unique';
+                    // next(err);
+                    console.log("el mail tiene un match con otro usuario diferente de ti. Enviar json para señalar el error")
+                    res.status(200).json({userExists: true});
+                    
+                  }
+                })
+                .catch((err) => console.log(err))
+
+            }
+
+          })
+          .catch((err) => console.log(err))
+
+
+        }else{
+          res.status(200).json({permissions: false})
+        }
+      })
+      .catch((err) => console.log(err))
+
+  }else{
+    // send json with indications to redirec
+    res.status(200).json({permissions: false})
+  }
+
 
 
 });
@@ -373,11 +409,39 @@ router.delete('/delete/:id', (req, res, next) => {
   // to do it check if the company of the user in the session 
   // is the admin of the company of the user to edit
 
-  User.findByIdAndDelete(req.params.id)
-  .then((employee) => {
-    res.status(200).json(employee);
-  })
-  .catch((err) => console.log(err));
+  const { _id, companyID, isAdmin } = req.session.currentUser;
+
+  const userToDelete = req.params.id;
+
+
+  if(isAdmin){ // 1.- Check if you are an admin or the user is editing himself  
+
+    User.findById(userToDelete) // 1.2.- Get the user to delete and obtain his company ID
+    .then((employee) => {
+      if (companyID === employee.companyID){ // 1.3.- Check if the user belongs the user admin's company
+        // Let the user delete the data
+        User.findByIdAndDelete(req.params.id)
+        .then((employee) => {
+          res.status(200).json(employee);
+        })
+        .catch((err) => console.log(err));
+
+        res.status(200).json(employee);
+
+      }else{
+        res.status(200).json({permissions: false})
+      }
+    })
+    .catch((err) => console.log(err))
+
+  }else{
+    // send json with indications to redirec
+    res.status(200).json({permissions: false})  
+  }  
+
+
+
+
 
 
 
