@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
@@ -9,7 +10,8 @@ const employeeRouter = require('./employee');
 const companyRouter = require('./company');
 const teamRouter = require('./team');
 
-//  * '/'
+
+
 router.use('/company', companyRouter);
 router.use('/employee', employeeRouter);
 router.use('/team', teamRouter);
@@ -19,10 +21,7 @@ const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/midd
 
 
 
-
-
-
-
+//route for testing
 router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
@@ -155,5 +154,10 @@ router.get('/private', isLoggedIn(), (req, res, next) => {
     message: 'This is a private message'
   });
 });
+
+
+
+
+
 
 module.exports = router;
