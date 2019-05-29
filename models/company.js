@@ -11,7 +11,8 @@ const companySchema = new Schema({
   postalCode: Number,
   province: String,
   country: String,
-  userAdminId: String
+  userAdminId: String,
+  imageUrl: String
 }, {
   timestamps: {
     createdAt: 'created_at',
