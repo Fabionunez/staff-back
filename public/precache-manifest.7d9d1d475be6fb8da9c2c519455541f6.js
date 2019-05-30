@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/static/media/cerebrisans-regular.548f0235.woff"
   },
   {
-    "revision": "85fca27d4aa5e1430827",
+    "revision": "98edd8d6719e7a6c0975",
     "url": "/static/css/main.b144584d.chunk.css"
   },
   {
@@ -24,12 +24,12 @@ self.__precacheManifest = [
     "url": "/static/media/avatar-status.7ca4c201.svg"
   },
   {
-    "revision": "6ac726130dcb2db3245cbd2b42a47685",
-    "url": "/static/media/avatar-group-hover-last.6ac72613.svg"
-  },
-  {
     "revision": "936a2d3aedfe174ffaf564808de152fe",
     "url": "/static/media/avatar-group.936a2d3a.svg"
+  },
+  {
+    "revision": "6ac726130dcb2db3245cbd2b42a47685",
+    "url": "/static/media/avatar-group-hover-last.6ac72613.svg"
   },
   {
     "revision": "672e50f73963cf97baae196cf2c7a7bd",
@@ -40,8 +40,8 @@ self.__precacheManifest = [
     "url": "/static/media/icon-status.c971ca19.svg"
   },
   {
-    "revision": "85fca27d4aa5e1430827",
-    "url": "/static/js/main.85fca27d.chunk.js"
+    "revision": "98edd8d6719e7a6c0975",
+    "url": "/static/js/main.98edd8d6.chunk.js"
   },
   {
     "revision": "abe53acee44a549766b43bd32c22c9ce",
@@ -52,20 +52,20 @@ self.__precacheManifest = [
     "url": "/static/media/cerebrisans-semibold.16e9c1c6.woff"
   },
   {
-    "revision": "91bff5f0d5f1128401a41dc3269a684b",
-    "url": "/static/media/cerebrisans-regular.91bff5f0.ttf"
-  },
-  {
-    "revision": "66f3c3aea89e311d54dce1b0f5968d67",
-    "url": "/static/media/cerebrisans-medium.66f3c3ae.ttf"
-  },
-  {
     "revision": "e63b280fde60f13c59b2eab17adfe03a",
     "url": "/static/media/cerebrisans-regular.e63b280f.eot"
   },
   {
     "revision": "c01e4a7dd60f3988a32c1b87e2b05cf0",
     "url": "/static/media/cerebrisans-medium.c01e4a7d.eot"
+  },
+  {
+    "revision": "66f3c3aea89e311d54dce1b0f5968d67",
+    "url": "/static/media/cerebrisans-medium.66f3c3ae.ttf"
+  },
+  {
+    "revision": "91bff5f0d5f1128401a41dc3269a684b",
+    "url": "/static/media/cerebrisans-regular.91bff5f0.ttf"
   },
   {
     "revision": "2a1663dd85b07223f419fc0e9b5abb53",
@@ -76,7 +76,7 @@ self.__precacheManifest = [
     "url": "/static/media/cerebrisans-semibold.25aa37ee.ttf"
   },
   {
-    "revision": "04d2e7e244c2051b5e0082eeea86ca20",
+    "revision": "52c90a6fd252b49dcb2d345edf91fced",
     "url": "/index.html"
   }
 ];
