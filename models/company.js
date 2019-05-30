@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const companySchema = new Schema({
+const companySchema = new Schema({ 
   tradeName: String,
   corporateName: String,
   taxIdNumber: String,
@@ -11,7 +11,7 @@ const companySchema = new Schema({
   postalCode: Number,
   province: String,
   country: String,
-  userAdminId: String,
+  userAdminId: String, //change to objectId in next version
   imageUrl: String
 }, {
   timestamps: {

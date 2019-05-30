@@ -105,6 +105,8 @@ Staff is a toolkit for the human resource managers, that help them to have all t
 - Company Service
   - companyUpdate(user)
   - companyView(id)
+  - imageUpload(file)
+
 
 - Employee Service
   - employeesList()
@@ -166,6 +168,7 @@ postalCode - Number
 province - String
 country - String
 userAdminId - String
+imageUrl - String
 ```
 
 
@@ -325,7 +328,7 @@ vision - String
   - check if is the admin of that company  
 
 
-- POST /image
+- POST /employee/image
   - Upload a photo to cloudinary
 
 
@@ -357,6 +360,10 @@ vision - String
     - province
     - country
   - update he info of the company of the userAdminId 200
+
+
+- POST /company/image
+  - Upload the logo to cloudinary
 
 
 - GET /team/list

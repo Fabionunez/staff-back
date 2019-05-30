@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
-
-
 const Company = require('../models/company');
 const parser = require('../config/cloudinary');
 
-// /company
-router.get('/', (req, res, next) => {
 
+
+
+
+// -----------------------------------------------------------------
+//
+//             /company   VIEW COMPANY INFO IN THE FORM
+//
+// -----------------------------------------------------------------
+router.get('/', (req, res, next) => {
 
   const { _id } = req.session.currentUser;
   const {tradeName, corporateName, taxIdNumber, address, city, postalCode, province, country, imageUrl} = req.body;
-
 
   Company.findOne({userAdminId:_id})
     .then((company) =>{
@@ -19,12 +23,17 @@ router.get('/', (req, res, next) => {
       res.status(200).json(company);
     })
     .catch((err) => console.log(err))
-
-
 });
 
 
 
+
+
+// -----------------------------------------------------------------
+//
+//     /company/info      GET LOGO FOR FUTURE VERSION IN SIDEBAR
+//
+// -----------------------------------------------------------------
 router.get('/logo', (req, res, next) => {
 
   const { companyID  } = req.session.currentUser;
@@ -35,8 +44,6 @@ router.get('/logo', (req, res, next) => {
       res.status(200).json(company);
     })
     .catch((err) => console.log(err))
-
-
 });
 
 
@@ -44,13 +51,15 @@ router.get('/logo', (req, res, next) => {
 
 
 
+// -----------------------------------------------------------------
+//
+//                   /company   UPDATE COMPANY INFO
+//
+// -----------------------------------------------------------------
 
 router.put('/', (req, res, next) => {
 
-    
   const {tradeName, corporateName, taxIdNumber, address, city, postalCode, province, country, imageUrl } = req.body;
-
-  console.log(req.body);
   
   const { _id } = req.session.currentUser;
 
@@ -66,6 +75,14 @@ router.put('/', (req, res, next) => {
 });
 
 
+
+
+
+// -----------------------------------------------------------------
+//
+//                /company/image   UPLOAD THE LOGO
+//
+// -----------------------------------------------------------------
 router.post('/image', parser.single('photo'), (req, res, next) => {
   console.log('file upload company');
   if (!req.file) {

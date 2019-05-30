@@ -10,18 +10,22 @@ const employeeRouter = require('./employee');
 const companyRouter = require('./company');
 const teamRouter = require('./team');
 
-
-
 router.use('/company', companyRouter);
 router.use('/employee', employeeRouter);
 router.use('/team', teamRouter);
-
 
 const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/middlewares');
 
 
 
-//route for testing
+
+
+
+// -----------------------------------------------------------------
+//
+//                       /me   GET THE SESSION
+//
+// -----------------------------------------------------------------
 router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
@@ -29,9 +33,11 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
 
 
 
+
+
 // -----------------------------------------------------------------
 //
-//                    /login   LOG IN
+//                           /login   LOG IN
 //
 // -----------------------------------------------------------------
 router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {

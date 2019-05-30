@@ -8,24 +8,21 @@ const parser = require('../config/cloudinary');
 
 
 
-// /employee  (list) in the front /employees
+// -----------------------------------------------------------------
+//
+//             /employees   GET THE LIST OF ALL EMPLOYEES
+//
+// -----------------------------------------------------------------
 router.get('/', (req, res, next) => {
-  //get the company you belong
-  //get the users of that company
 
-
-  User.findOne({_id: req.session.currentUser._id})
+  User.findOne({_id: req.session.currentUser._id}) //get the company you belong
     .then((employee) => {
 
-      User.find({companyID: employee.companyID})
+      User.find({companyID: employee.companyID}) //get the users of that company
       .then((employees) => {
-        //console.log(employees)
         res.status(200).json(employees);
-  
       })
       .catch((err) => console.log(err));
-
-
     })
     .catch((err) => console.log(err))
 
@@ -36,17 +33,11 @@ router.get('/', (req, res, next) => {
 
 
 
-
-
-
-
-
 // -----------------------------------------------------------------
 //
-//         // /employee/add   ADD EMPLOYEE
+//                  /employee/add   ADD EMPLOYEE
 //
 // -----------------------------------------------------------------
-
 router.post('/add', (req, res, next) => {
 
   const {             
@@ -72,7 +63,6 @@ router.post('/add', (req, res, next) => {
     emergencyPhone,
     managerID,
     imageUrl } = req.body;
-  
   
   User.findOne({username}, 'username')
     .then((employeeMatch) => {
@@ -120,9 +110,6 @@ router.post('/add', (req, res, next) => {
         
             newUser.save()
               .then((user) => {
-                // TODO delete password 
-                //req.session.currentUser = newUser;
-                console.log("in save")
                 res.status(200).json(user);
               })
               .catch((err) => console.log(err))
@@ -144,7 +131,6 @@ router.post('/add', (req, res, next) => {
 //         /employee/view/:id   VIEW PROFILE (VIEW DATA)
 //
 // -----------------------------------------------------------------
-
 router.get('/view/:id', (req, res, next) => {
 
   console.log("view route")
@@ -152,13 +138,7 @@ router.get('/view/:id', (req, res, next) => {
   const userToView = req.params.id;
 
   const { companyID } = req.session.currentUser;
-
-  // console.log("req.session.currentUser", req.session.currentUser)
-
-  console.log("userToView: ",userToView);
-  console.log("companyID: ",companyID);
   
-
   User.findById(userToView) // find the user of the url param
     .then((employee) => {
       if (employee.companyID === companyID){ // check if the user have the same company as the user
@@ -170,7 +150,6 @@ router.get('/view/:id', (req, res, next) => {
       }
     })
     .catch((err) => console.log(err))
-
 
 });
 
@@ -185,17 +164,11 @@ router.get('/view/:id', (req, res, next) => {
 //         /employee/edit/:id   EDIT EMPLOYEE (VIEW DATA)
 //
 // -----------------------------------------------------------------
-
 router.get('/edit/:id', (req, res, next) => {
-
 
   const { _id, companyID, isAdmin } = req.session.currentUser;
 
   const userToEdit = req.params.id;
-
-  // console.log("companyID", companyID)
-  // console.log("_id: ", _id);
-  // console.log("userToEdit: ", userToEdit);
 
   if(isAdmin || _id === userToEdit){ // 1.- Check if you are an admin or the user is editing himself
 
@@ -216,7 +189,6 @@ router.get('/edit/:id', (req, res, next) => {
     res.status(200).json({permissions: false})
   }
 
-
 });
 
 
@@ -233,8 +205,6 @@ router.get('/edit/:id', (req, res, next) => {
 router.put('/edit', (req, res, next) => {
 
   const { _id, companyID, isAdmin } = req.session.currentUser;
-
-
 
   const {
     id, 
@@ -262,34 +232,22 @@ router.put('/edit', (req, res, next) => {
     imageUrl
    } = req.body;
 
-   const userToEdit = id;
+  const userToEdit = id;
 
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password, salt);
 
-
-  console.log("_id: ", _id);
-  console.log("userToEdit: ", userToEdit);
-
-
   if(isAdmin || _id.toString() === userToEdit){ // 1.- Check if you are an admin or is the user trying to edit himself
 
-    console.log("1");
     User.findById(userToEdit) // 1.2.- Get the user to edit and obtain his company ID
       .then((employee) => {
         if (companyID === employee.companyID){ // 1.3.- Check if the user belongs the user admin's company
           // Let the admin edit the data
-          console.log("2");
-
 
         User.findOne({username: username}) // 1.4.- find if exist a user with the email recieved
           .then((employeeMatch) =>{
 
-            console.log("3");
-
               if(employeeMatch === null){ 
-
-                console.log("4");
 
                 console.log("No encontró ningún usuario con ese mail. Adelante con el update")
                 User.findByIdAndUpdate(id, {$set: {     

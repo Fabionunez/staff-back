@@ -8,6 +8,7 @@ const User = require('../models/user');
 
 
 
+
 // -----------------------------------------------------------------
 //
 //                  /team/list   LIST OF THE TEAMS
@@ -29,7 +30,6 @@ router.get('/list', (req, res, next) => {
         Team.find({companyId: company._id})
         .populate('usersIds')
         .then((teams) => {
-          console.log(teams)
           res.status(200).json(teams)})
         .catch((err) => console.log(err))
 
@@ -41,6 +41,10 @@ router.get('/list', (req, res, next) => {
     .catch((err) => console.log(err))
 
 });
+
+
+
+
 
 
 
@@ -75,7 +79,6 @@ router.post('/new', (req, res, next) => {
         // save the new team in mongo
         newTeam.save()
           .then((team)=>{
-            console.log(team);
             res.status(200).json(team);
           })
           .catch((err) => console.log(err))
@@ -116,33 +119,23 @@ router.get('/view/:id', (req, res, next) => {
       Team.findById(teamToView) /*.populate('companyId')*/
         .then((team) =>{
 
-          console.log("company._id -> ", company._id);
-          console.log("team.companyId -> ", team.companyId);
-
           if(company._id.toString() === team.companyId){
 
-            // console.log("can view")
             Team.findById(req.params.id)
             .populate('usersIds')
             .then((team) => {
-              console.log(team)
               res.status(200).json(team);
             })
             .catch((err) => console.log(err));
 
           }else{
-            // console.log("no permissions")
             res.status(200).json({canView: false});
           }
 
         })
-      
+    
     })
     .catch((err) => console.log(err))
-
-
-
-
 
 });
 
@@ -172,9 +165,6 @@ router.delete('/delete/:id', (req, res, next) => {
       // get the team to delete
       Team.findById(teamToDelete)
         .then((team) =>{
-
-          // console.log("company._id -> ", company._id);
-          // console.log("team.companyId -> ", team.companyId);
 
           if(company._id.toString() === team.companyId){
 
@@ -212,8 +202,6 @@ router.put('/edit', (req, res, next) => {
   const { _id } = req.session.currentUser;
   const {id, name, usersIds, teamLeaderid, mission, vision} = req.body;
 
-  console.log("***********************************: ", teamLeaderid)
-
   // check the admin of the company from the session
   Company.findOne({userAdminId:_id})
     .then((company) => {
@@ -223,15 +211,11 @@ router.put('/edit', (req, res, next) => {
       Team.findById(id)
         .then((team) =>{
 
-          // console.log("company._id -> ", company._id);
-          // console.log("team.companyId -> ", team.companyId);
-
           if(company._id.toString() === team.companyId){
 
             // console.log("can edit")
             Team.findByIdAndUpdate(id, { $set: {name, usersIds, teamLeaderid, mission, vision}}, { new: true })
             .then((team) => {
-              console.log(team);
               res.status(200).json(team);
             })
             .catch((err) => console.log(err));
